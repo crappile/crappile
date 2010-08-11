@@ -310,22 +310,6 @@ do_quiet_quick_behavior ()
     echo $CP_LAST_LINE_UPON_SUCCESS
 }
 
-###################################
-E_WRONG_ARGS=85
-script_parameters="-e"
-Number_of_expected_args=1
-if false ; then # begin commented-out portion
-
-if [ $# -ne $Number_of_expected_args ]
-then
-  echo "Usage: `basename $0` $script_parameters"
-  # `basename $0` is the script's filename.
-  exit $E_WRONG_ARGS
-fi
-
-fi # end commented-out portion
-###################################
-
 
 OUR_ALLOWED_OPTS=ehiq
 FINISH_EARLY=0
@@ -364,22 +348,6 @@ else
 
     done
 fi
-
-################################# commented out
-if false
-then
-#echo "Resetting"
-# if you uncomment the next line, you REMOVE any already-consumed args
-#shift $((OPTIND-1))
-OPTIND=1
-
-while getopts  "$OUR_ALLOWED_OPTS" flag
-do
-    true
-  #echo "$flag" $OPTIND $OPTARG
-done
-fi
-################################# commented out END
 
 
 
