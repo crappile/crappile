@@ -58,31 +58,35 @@ Boolean GetMetadataForFile(void* thisInterface,
 	FILE *fp;
 	fp=fopen(bytes, "r");
 	
-	/**
-	 FIXME / TODO - this needs to be a while loop, _NOT_ a silly "if"
-	 */
 	if ( fp )
 	{
-		static const int BUFFER_SIZE = 500;
+		static const int BUFFER_SIZE = 1000;
 		char buffer[BUFFER_SIZE];
+		buffer[0] = '\0';
 		
 		while (!feof(fp))
 		{
-			fgets(buffer,BUFFER_SIZE,fp);
+			int sizeOfString = strlen(buffer);
+			int maxToRead = BUFFER_SIZE - sizeOfString - 1;
 			
+			fgets( (&(buffer[sizeOfString])),maxToRead,fp);
+		}	
+		
+		if ( strlen(buffer) > 0 )
+		{
 			CFStringRef tagValue = CFStringCreateWithBytes (
-												 kCFAllocatorDefault
-												 , (unsigned char*) buffer 
-												 , strlen(buffer)
-												 , kCFStringEncodingASCII
-												 , false //Boolean isExternalRepresentation
-			);
+															kCFAllocatorDefault
+															, (unsigned char*) buffer 
+															, strlen(buffer)
+															, kCFStringEncodingASCII
+															, false //Boolean isExternalRepresentation
+															);
 			
 			CFDictionarySetValue(attributes, CFSTR("kMDItemFinderComment"), tagValue);
 			CFDictionarySetValue(attributes, CFSTR("kMDItemTextContent"), tagValue);			
 			
 			CFRelease( tagValue );
-		}	
+		}
 		
 		fclose(fp);
 		return TRUE;
